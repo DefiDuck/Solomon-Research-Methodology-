@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.Python
+build/
+dist/
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# Backtest engine runtime artefacts
+backtest_skeleton/runs/
+backtest_skeleton/**/_data_cache/
+*.parquet
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local notes / scratch
+scratch/
+NOTES.local.md
+
+# Internal audit trail — kept locally, never pushed.
+# This file contains the reverse mapping from public placeholders to private
+# resolutions and the list of removed numbers/identifiers; publishing it
+# would defeat the sanitization.
+SANITIZATION_REPORT.md

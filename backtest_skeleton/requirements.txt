@@ -1,0 +1,8 @@
+# Solomon-method backtest skeleton — minimal deps
+pandas>=2.0.0
+numpy>=1.24.0
+# Add your domain's data adapter:
+# yfinance>=1.3.0       (financial)
+# requests>=2.30.0      (REST API)
+# polygon-api-client    (financial, optional)
+# pyalgotrade           (financial, optional)
