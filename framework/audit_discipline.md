@@ -84,6 +84,28 @@ In a multi-agent pipeline (see `architecture/four_agent_pipeline.md`), the Audit
 
 If you don't have multiple agents, separate the roles in time: write Findings now, audit them in 1–2 weeks. The temporal separation provides part of the same effect.
 
+## When the audit itself uses subagents
+
+If you scale the audit by dispatching subagents — one cross-reference scorer per Finding, three independent adversarial auditors per Finding, a calibration subagent that samples the corpus to estimate recall — you inherit a new failure mode: **subagent-level sycophancy**.
+
+A subagent that reads an isolated quote without the surrounding 10–15 messages of context can mis-classify the source's intent. The most common error: classifying *criticism* as *teaching*. The source says, in effect, *"Educator X claims A, B, C; that's wrong because Y."* A subagent that lifts only "A, B, C" out of the conversation reports that the source teaches A, B, C — and your audit, which was supposed to catch exactly this kind of misreading, has just produced one of its own.
+
+This is the same failure mode the audit is meant to catch, replicated one layer deeper.
+
+### The remedy: mandatory context windows
+
+For any subagent that classifies a quote — verdict, tone, source-intent — require it to verify against a **≥10-message context window** before reporting. State this in the subagent brief explicitly:
+
+> Before classifying any quote, recover the surrounding conversation (≥5 messages before, ≥5 after). If the surrounding context contradicts your initial reading, downgrade or reject. Cite the verbatim context, not just the target quote.
+
+Not optional. Not a suggestion. A mandatory step in the brief, with the format of the context window made explicit (timestamps + author + body).
+
+### Audit-on-the-audit
+
+After a subagent-driven audit completes, sample its outputs and verify them against full conversation context manually. N≈10 is usually enough, but it must include any output the subagent flagged as high-confidence — those are the most likely to slip through review unchallenged, which makes them precisely the ones to verify.
+
+If the audit-on-the-audit catches an error, the error is data: it tells you which class of subagent claim is most prone to sycophancy in your specific corpus. Patch the subagent brief for that class and the next audit will be cleaner. The point is not to drive the rate to zero; the point is to make the rate measurable and decreasing.
+
 ## Don't audit yourself in real time
 
 Auditing in real time, at the moment a claim is being formed, is exhausting and produces under-claiming (you become too conservative). The audit habit works best as a periodic batch — write claims confidently when you're synthesizing, then audit them coldly when you're auditing.
